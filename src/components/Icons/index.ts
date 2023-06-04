@@ -31,6 +31,7 @@ class Icons {
   static Templates = Templates
   static Search = Search
   static Images = Images
+  static AI = Layers
   static Videos = Video
   static Graphics = Graphics
   static Pixabay = Pixabay

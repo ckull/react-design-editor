@@ -9,20 +9,24 @@ import { AppProvider } from "./contexts/AppContext"
 import { DesignEditorProvider } from "./contexts/DesignEditor"
 import { I18nextProvider } from "react-i18next"
 import { TimerProvider } from "@layerhub-io/use-timer"
+import ModalProvider from "./providers/modal"
 import i18next from "i18next"
 import "./translations"
+
 
 const engine = new Styletron()
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReduxProvier store={store}>
+      
       <DesignEditorProvider>
         <TimerProvider>
           <AppProvider>
             <ScenifyProvider>
               <StyletronProvider value={engine}>
                 <BaseProvider theme={LightTheme}>
+                  <ModalProvider/>
                   <I18nextProvider i18n={i18next}>{children}</I18nextProvider>
                 </BaseProvider>
               </StyletronProvider>

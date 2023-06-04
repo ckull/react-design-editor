@@ -36,6 +36,10 @@ export const BASE_ITEMS = [
     id: "layers",
     name: "Layers",
   },
+  {
+    id: "ai",
+    name: "AI",
+  },
 ]
 
 export const VIDEO_PANEL_ITEMS = [

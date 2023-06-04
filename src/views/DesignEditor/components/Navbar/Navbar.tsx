@@ -14,6 +14,10 @@ import { loadVideoEditorAssets } from "~/utils/video"
 import DesignTitle from "./DesignTitle"
 import { IDesign } from "~/interfaces/DesignEditor"
 import Github from "~/components/Icons/Github"
+import usePreviewModal from "~/hooks/usePreviewModal"
+
+{/* @ts-ignore */} 
+import { changeDpiDataUrl  } from 'changedpi'
 
 const Container = styled<"div", {}, Theme>("div", ({ $theme }) => ({
   height: "64px",
@@ -29,6 +33,7 @@ const Navbar = () => {
   const editorType = useEditorType()
   const editor = useEditor()
   const inputFileRef = React.useRef<HTMLInputElement>(null)
+  const previewModal = usePreviewModal()
 
   const parseGraphicJSON = () => {
     const currentScene = editor.scene.exportToJSON()
@@ -62,6 +67,19 @@ const Navbar = () => {
     } else {
       console.log("NO CURRENT DESIGN")
     }
+  }
+
+  const parseGraphic = async () => {
+    const currentScene = editor.scene.exportToJSON()
+    const filterd = {
+      ...currentScene,
+      layers: currentScene['layers'].filter(item => item.id != 'background')
+    }
+  
+    const image = await editor.renderer.render(filterd)
+    const validImage = await changeDpiDataUrl(image, 300);
+    await download(validImage)
+   
   }
 
   const parsePresentationJSON = () => {
@@ -138,8 +156,15 @@ const Navbar = () => {
     const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`
     const a = document.createElement("a")
     a.href = dataStr
-    a.download = "template.json"
+    a.download = "image.json"
     a.click()
+  }
+
+  const download = async (data: string) => {
+    const link = document.createElement('a');
+    link.href = data;
+    link.download = `${currentDesign.name}.png`;
+    link.click();
   }
 
   const makeDownloadTemplate = async () => {
@@ -152,6 +177,12 @@ const Navbar = () => {
       return parseVideoJSON()
       }
     }
+  }
+
+  const togglePreviewModal = () => {
+    previewModal.onOpen()
+    console.log('previewModal: ', previewModal)
+    console.log(currentDesign)
   }
 
   const loadGraphicTemplate = async (payload: IDesign) => {
@@ -292,7 +323,7 @@ const Navbar = () => {
 
           <Button
             size="compact"
-            onClick={makeDownloadTemplate}
+            onClick={togglePreviewModal}
             kind={KIND.tertiary}
             overrides={{
               StartEnhancer: {
@@ -319,21 +350,15 @@ const Navbar = () => {
             <Play size={24} />
           </Button>
 
-          <Button
-            size="compact"
-            onClick={() => window.location.replace("https://github.com/layerhub-io/react-design-editor")}
-            kind={KIND.tertiary}
-          >
-            <Github size={24} />
-          </Button>
+          
 
           <Button
             style={{ marginLeft: "0.5rem" }}
             size="compact"
-            onClick={() => window.location.replace("https://editor.layerhub.io")}
+            onClick={() => parseGraphic()}
             kind={KIND.primary}
           >
-            Try PRO
+            SAVE
           </Button>
         </Block>
       </Container>

@@ -25,7 +25,7 @@ const PanelsList = () => {
       <Scrollable autoHide={true}>
         {PANEL_ITEMS.map((panelListItem) => (
           <PanelListItem
-            label={t(`panels.panelsList.${panelListItem.id}`)}
+            label={t(`${panelListItem.name}`)}
             name={panelListItem.name}
             key={panelListItem.name}
             icon={panelListItem.name}
@@ -42,7 +42,7 @@ const PanelListItem = ({ label, icon, activePanel, name }: any) => {
   const setIsSidebarOpen = useSetIsSidebarOpen()
   const [css, theme] = useStyletron()
   // @ts-ignore
-  const Icon = Icons[icon]
+  const Icon = Icons[icon] 
   return (
     <Block
       id="EditorPanelList"
