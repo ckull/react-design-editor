@@ -12,7 +12,7 @@ const PreviewModal: React.FC<ModalProps> = (props) => {
     const boxRef = useRef() as any;
     const previewModal = usePreviewModal()
     const [canvasWidth, setCanvasWidth] = useState(0);
-        const [canvasHeight, setCanvasHeight] = useState(0);        
+    const [canvasHeight, setCanvasHeight] = useState(0);        
     const { width, height } = useElementSize(boxRef, previewModal.isOpen);
 
 

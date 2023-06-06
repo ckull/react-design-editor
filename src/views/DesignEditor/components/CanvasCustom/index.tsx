@@ -15,6 +15,7 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
   //   const { setCanvas } = useCanvasContext()
   const canvasRef: any = useRef(null)
   const workAreaRef: any = useRef(null)
+  const shirtRef: any = useRef(null)
   const isMounted: any = useRef(true)
   const maskRef: any = useRef()
   const { currentPreview } = useContext(DesignEditorContext)
@@ -57,9 +58,6 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
         controlsAboveOverlay: true,
       })
 
-      const opts = {
-       
-      }
       canvasRef.current = new fabric.Canvas(canvasRef.current, {
         backgroundColor: '#acacac',
         // backgroundImage: '/blackShirt.jpg',
@@ -82,43 +80,22 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
         shirtImage.lockMovementY = true
         shirtImage.center()
 
-     
-
-        // Add the shirt image to the canvas
-        // // Load the workspace image
-        // // const workspaceImageUrl = `${image}`; // Replace with your Base64 workspace image string
-        // fabric.Image.fromURL('/black-shirt.jpg', (workspaceImage) => {
-        //   // Scale the workspace image to be smaller than the shirt image
-        //   let workspaceImageScaleFactor = Math.min(
-        //     shirtImage.getScaledWidth() * 0.8 / workspaceImage.getScaledWidth(),  // Make workspace 80% the size of the shirt
-        //     shirtImage.getScaledHeight() * 0.8 / workspaceImage.getScaledHeight()
-        //   );
-        //   workspaceImage.scale(workspaceImageScaleFactor);
-    
-        //   // Add the workspace image to the canvas
-        //   canvasRef.current.add(workspaceImage);
-        //   workspaceImage.center()
-        // });
+        shirtRef.current = shirtImage
       });
 
      
   
       canvasRef.current.add(workAreaRef.current)
-      workAreaRef.current.center()
+     
 
       loadImage()
-
-      workAreaRef.current.clipPath = new fabric.Rect({
-        width: workAreaRef.current.width,
-        height: workAreaRef.current.height,
-        top: workAreaRef.current.top,
-        left: workAreaRef.current.left,
-        absolutePositioned: true,
-      });
+     
       
 
       isMounted.current = false
     } 
+
+    
 
     if(!isMounted.current) {
       canvasRef.current.clipTo = function(ctx: any) {
@@ -127,12 +104,21 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
       canvasRef.current.setWidth(width - 48 );
       canvasRef.current.setHeight(height);
       canvasRef.current.renderAll();
-      
-
     }
 
 
-    // loadBackground()
+    workAreaRef.current.center()
+    workAreaRef.current.clipPath = new fabric.Rect({
+      width: workAreaRef.current.width,
+      height: workAreaRef.current.height,
+      top: workAreaRef.current.top,
+      left: workAreaRef.current.left,
+      absolutePositioned: true,
+    });
+
+    if(shirtRef.current) {
+      shirtRef.current.center()
+    }
 
 
  
