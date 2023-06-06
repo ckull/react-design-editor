@@ -5,26 +5,36 @@ interface Dimensions {
   height: number;
 }
 
-const useElementSize = (ref: RefObject<HTMLElement>): Dimensions => {
+const useElementSize = (ref: RefObject<HTMLElement>, isOpen: Boolean): Dimensions => {
   const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 });
 
   useEffect(() => {
-    const updateSize = () => {
-      if(ref.current) {
-        setDimensions({
-          width: ref.current.offsetWidth,
-          height: ref.current.offsetHeight,
-        });
-      }
-    };
+    setTimeout(() => {
+      if (!isOpen && !ref.current) return
 
-    // Initial call is delayed
-    setTimeout(updateSize, 1);
+      
+      const updateSize = () => {
+        if(ref.current) {
+          console.log('set dimentsion: ', ref.current.offsetWidth)
+          setDimensions({
+            width: ref.current.offsetWidth,
+            height: ref.current.offsetHeight,
+          });
+        }
+      
 
-    window.addEventListener('resize', updateSize);
+      };
 
-    return () => window.removeEventListener('resize', updateSize);
-  }, [ref]);
+      updateSize()
+
+      window.addEventListener('resize', updateSize);
+
+      return () => window.removeEventListener('resize', updateSize);
+
+    }, 0)
+
+
+  }, [ref, isOpen])
 
   return dimensions;
 };

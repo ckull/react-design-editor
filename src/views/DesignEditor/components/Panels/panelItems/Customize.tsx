@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect} from "react"
 import { Button, SIZE } from "baseui/button"
 import { HexColorPicker } from "react-colorful"
 import { StatefulPopover, PLACEMENT } from "baseui/popover"
@@ -39,6 +39,12 @@ const Customize = () => {
     setState({ ...state, [type]: value })
     changeBackgroundColor(value)
   }
+
+  useEffect(() => {
+    if(editor) {
+      console.log('frame size: ', editor.frame)
+    }
+  }, [])
 
   return (
     <Block $style={{ flex: 1, display: "flex", flexDirection: "column" }}>

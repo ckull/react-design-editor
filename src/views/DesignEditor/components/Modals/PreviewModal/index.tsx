@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect ,useState } from 'react'
 import { Modal, ModalBody, ModalHeader, ModalFooter, ModalButton } from 'baseui/modal'
 import usePreviewModal from '~/hooks/usePreviewModal';
 import { ROLE } from 'baseui/modal';
@@ -11,13 +11,11 @@ type ModalProps = React.ComponentProps<typeof Modal>;
 const PreviewModal: React.FC<ModalProps> = (props) => {
     const boxRef = useRef() as any;
     const previewModal = usePreviewModal()
-    const { width, height } = useElementSize(boxRef);
-    
-    useEffect(() => {
-        if(boxRef.current) {
-            console.log('boxRef: ', boxRef.current.offsetHeight)
-        }
-    }, [previewModal.isOpen])
+    const [canvasWidth, setCanvasWidth] = useState(0);
+        const [canvasHeight, setCanvasHeight] = useState(0);        
+    const { width, height } = useElementSize(boxRef, previewModal.isOpen);
+
+
     return (
         <Modal
             {...props}
@@ -44,10 +42,8 @@ const PreviewModal: React.FC<ModalProps> = (props) => {
             }}
         >
             <ModalHeader>Preview and Customize your T-Shirt before publish</ModalHeader>
-            <ModalBody $style={{display: 'flex', flexGrow: '1'}}>
-                <div ref={boxRef} className='w-full min-h-[500px] flex-1' >
-                    <CanvasCustom width={width} height={height}/>
-                </div>
+            <ModalBody ref={boxRef} $style={{display: 'flex', flexGrow: '1', width: '100%', minHeight: '500px'}}>
+                 <CanvasCustom width={width} height={height}/>
             </ModalBody>
             <ModalFooter>
                 <ModalButton>

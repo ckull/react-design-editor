@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from 'react'
+import { useEffect, useRef, useContext, useState, RefObject } from 'react'
 // import { useCanvasContext } from '@components/Canvas/hooks'
 import { fabric } from 'fabric'
 import { DesignEditorContext } from '~/contexts/DesignEditor'
@@ -6,7 +6,6 @@ import PreviewEditor from '../../PreviewEditor'
 import DesignEditor from '../../DesignEditor'
 import { useEditor } from '@layerhub-io/react'
 import useElementSize from '~/hooks/useElementSize'
-
 interface CanvasCustomProps {
   width: number,
   height: number
@@ -14,76 +13,127 @@ interface CanvasCustomProps {
 const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
   //   const containerRef = useContainerHandler()
   //   const { setCanvas } = useCanvasContext()
-  const canvasRef: any = useRef()
-  const workAreaRef: any = useRef()
+  const canvasRef: any = useRef(null)
+  const workAreaRef: any = useRef(null)
+  const isMounted: any = useRef(true)
   const maskRef: any = useRef()
   const { currentPreview } = useContext(DesignEditorContext)
   const editor = useEditor()
+
+  const workAreaWidth = width/1.5;
+  const workAreaHeight = height/1.5;
+
+  
   useEffect(() => {
-    // const initialHeigh = containerRef.current.clientHeight 
-    // const initialWidth = containerRef.current.clientWidth 
-    console.log('width: ', width, 'height: ', height)
-    canvasRef.current = new fabric.Canvas(canvasRef.current, {
-      backgroundColor: '#acacac',
-      width: 700,
-      height: 500,
-      preserveObjectStacking: true,
-      enableRetinaScaling: true,
-      controlsAboveOverlay: true,
-    
-    })
-
-    loadBackground()
-
-    maskRef.current = new fabric.Rect({
-      //@ts-ignore
-      id: 'mask',
-      width: 400,
-      height: 400,
-      absolutePositioned: true,
-      fill: '#ffffff',
-      selectable: false,
-      hoverCursor: 'default',
-    })
-
-    // setCanvas(canvas)
-    workAreaRef.current = new fabric.Rect({
-      //@ts-ignore
-      id: 'workarea',
-      width: 400,
-      height: 400,
-      absolutePositioned: true,
-      fill: '#ffffff',
-      selectable: false,
-      hoverCursor: 'default',
-    })
-
-    canvasRef.current.add(workAreaRef.current)
-    canvasRef.current.add(maskRef.current)
-    workAreaRef.current.center()
-
-    workAreaRef.current.clipPath = new fabric.Rect({
-      left: maskRef.current.left,
-      top: maskRef.current.top,
-      width: maskRef.current.width,
-      height: maskRef.current.height,
-    });
-
-    loadImage()
+    if(editor) {
+      console.log('editor: ', editor)
+      const rect = editor.frame.getBoundingClientRect()
+      console.log('rect: ', rect)
+    }
   }, [])
+
+  useEffect(() => {
+   
+
+    if (!width && !height) return
+
+  
+
+    if (isMounted.current) {
+     
+
+      workAreaRef.current = new fabric.Rect({
+        //@ts-ignore
+        id: 'workarea',
+        width: 480,
+        height: 540,
+        absolutePositioned: true,
+        fill: '#ffffff',
+        selectable: false,
+        hoverCursor: 'default',
+        objectCaching: false,
+        controlsAboveOverlay: true,
+      })
+
+      const opts = {
+       
+      }
+      canvasRef.current = new fabric.Canvas(canvasRef.current, {
+        backgroundColor: '#acacac',
+        // backgroundImage: '/blackShirt.jpg',
+        width: width - 48,
+        height: height,
+     
+      })
+
+     
+  
+      canvasRef.current.add(workAreaRef.current)
+      workAreaRef.current.center()
+
+      loadImage()
+
+      workAreaRef.current.clipPath = new fabric.Rect({
+        width: workAreaRef.current.width,
+        height: workAreaRef.current.height,
+        top: workAreaRef.current.top,
+        left: workAreaRef.current.left,
+        absolutePositioned: true,
+      });
+      
+
+      isMounted.current = false
+    } 
+
+    if(!isMounted.current) {
+      canvasRef.current.clipTo = function(ctx: any) {
+        workAreaRef.current.render(ctx);
+      };
+      canvasRef.current.setWidth(width - 48 );
+      canvasRef.current.setHeight(height);
+      canvasRef.current.renderAll();
+      
+
+    }
+
+
+    // loadBackground()
+
+
+ 
+    
+    // workAreaRef.current.clipPath = new fabric.Rect({
+    //   left: maskRef.current.left,
+    //   top: maskRef.current.top,
+    //   width: maskRef.current.width,
+    //   height: maskRef.current.height,
+    // });
+
+
+    
+
+
+  }, [width, height])
+
+
+ 
+
+
 
   const loadBackground = () => {
     fabric.Image.fromURL('/black-shirt.jpg', (img) => {
 
       // Set the shirt image as the canvasRef.current background
       canvasRef.current.setBackgroundImage(img, canvasRef.current.renderAll.bind(canvasRef.current, {
-        scaleX: canvasRef.current.width ,
+        scaleX: canvasRef.current.width,
         scaleY: canvasRef.current.height,
 
       }));
 
     })
   }
+
+ 
 
   const loadImage = async () => {
     const currentScene = editor.scene.exportToJSON()
@@ -93,7 +143,6 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
     }
     const image = await editor.renderer.render(filterd)
 
-    console.log('image: ', image)
     const imageUrl = `${image}`; // Replace with your Base64 image string
     fabric.Image.fromURL(imageUrl, (img) => {
 
@@ -110,6 +159,10 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
 
       canvasRef.current.add(img);
       img.center()
+
+      img.set({
+        clipPath: workAreaRef.current
+      });
 
     });
   };

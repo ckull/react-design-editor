@@ -1,7 +1,7 @@
 import React from "react"
 import { Block } from "baseui/block"
-
 const EditorContainer = ({ children }: { children: React.ReactNode }) => {
+
   return (
     <Block
       $style={{
