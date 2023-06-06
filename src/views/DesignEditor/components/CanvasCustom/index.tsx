@@ -45,10 +45,12 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
       workAreaRef.current = new fabric.Rect({
         //@ts-ignore
         id: 'workarea',
-        width: 480,
-        height: 540,
+        width: 200,
+        height: 400,
         absolutePositioned: true,
-        fill: '#ffffff',
+        stroke: 'white',
+        fill: 'transparent',
+        strokeWidth: 1,
         selectable: false,
         hoverCursor: 'default',
         objectCaching: false,
@@ -65,6 +67,39 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
         height: height,
      
       })
+
+      fabric.Image.fromURL('/black-shirt.jpg', (shirtImage) => {
+        // Scale the shirt image to fit within the canvas
+        let shirtImageScaleFactor = Math.min(
+          canvasRef.current.width / shirtImage.getScaledWidth(),
+          canvasRef.current.height / shirtImage.getScaledHeight()
+        );
+        canvasRef.current.add(shirtImage);
+        shirtImage.scale(shirtImageScaleFactor);
+        shirtImage.lockMovementX = true
+        shirtImage.sendToBack()
+        shirtImage.selectable = false;
+        shirtImage.lockMovementY = true
+        shirtImage.center()
+
+     
+
+        // Add the shirt image to the canvas
+        // // Load the workspace image
+        // // const workspaceImageUrl = `${image}`; // Replace with your Base64 workspace image string
+        // fabric.Image.fromURL('/black-shirt.jpg', (workspaceImage) => {
+        //   // Scale the workspace image to be smaller than the shirt image
+        //   let workspaceImageScaleFactor = Math.min(
+        //     shirtImage.getScaledWidth() * 0.8 / workspaceImage.getScaledWidth(),  // Make workspace 80% the size of the shirt
+        //     shirtImage.getScaledHeight() * 0.8 / workspaceImage.getScaledHeight()
+        //   );
+        //   workspaceImage.scale(workspaceImageScaleFactor);
+    
+        //   // Add the workspace image to the canvas
+        //   canvasRef.current.add(workspaceImage);
+        //   workspaceImage.center()
+        // });
+      });
 
      
   

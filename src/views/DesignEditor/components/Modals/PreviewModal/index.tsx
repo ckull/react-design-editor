@@ -45,12 +45,12 @@ const PreviewModal: React.FC<ModalProps> = (props) => {
             <ModalBody ref={boxRef} $style={{display: 'flex', flexGrow: '1', width: '100%', minHeight: '500px'}}>
                  <CanvasCustom width={width} height={height}/>
             </ModalBody>
-            <ModalFooter>
+            {/* <ModalFooter>
                 <ModalButton>
                     Cancel
                 </ModalButton>
                 <ModalButton>Okay</ModalButton>
-            </ModalFooter>
+            </ModalFooter> */}
         </Modal>
     )
 }
