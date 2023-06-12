@@ -357,7 +357,7 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@layerhub-io/core@^0.3.3":
+"@layerhub-io/core@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@layerhub-io/core/-/core-0.3.3.tgz#9301d61455cfdf1156faa1572a395ec639a356c3"
   integrity sha512-mCNiENceq8SYXlCo2MWfmftyZaJXrJu4mI7RvwOrtQ8dhVA1hNVDmr9jP4a2JLoaUFPmAxcyRIwnvLUyQMjx+A==
@@ -384,12 +384,12 @@
     dom-css "^2.1.0"
     raf "^3.4.1"
 
-"@layerhub-io/react@^0.3.2":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@layerhub-io/react/-/react-0.3.3.tgz#de0e822697efa5a236577e49fb9a8af86445d76d"
-  integrity sha512-pTnJou/V935tQeD51K4DCXHCF01x6hAugJCoR2LX+Pa2c+aKqLBZxdHPEHCzoEUmxnuh+2pJnBYHMkHpTbC0uQ==
+"@layerhub-io/react@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@layerhub-io/react/-/react-0.3.2.tgz#90d280a1c967c99afdf88ec5a7fe40ea2df6694c"
+  integrity sha512-x4pw6ToSrQxchiLOv+3It+kW0nXb9mbfMVS5zMf5YgMPphcpMK5BG4+muugyJRIKRXwO7rJRwCa7GKx3FFPsqQ==
   dependencies:
-    "@layerhub-io/core" "^0.3.3"
+    "@layerhub-io/core" "^0.3.2"
     react "^18.0.0"
     react-dom "^18.0.0"
     resize-observer-polyfill "^1.5.1"

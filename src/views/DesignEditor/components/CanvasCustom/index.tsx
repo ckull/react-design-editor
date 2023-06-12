@@ -6,6 +6,7 @@ import PreviewEditor from '../../PreviewEditor'
 import DesignEditor from '../../DesignEditor'
 import { useEditor } from '@layerhub-io/react'
 import useElementSize from '~/hooks/useElementSize'
+import { RGB2CMYK } from '../../utils/filter'
 interface CanvasCustomProps {
   width: number,
   height: number
@@ -21,27 +22,22 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
   const { currentPreview } = useContext(DesignEditorContext)
   const editor = useEditor()
 
-  const workAreaWidth = width/1.5;
-  const workAreaHeight = height/1.5;
+  const workAreaWidth = width / 1.5;
+  const workAreaHeight = height / 1.5;
+
+
 
   
-  useEffect(() => {
-    if(editor) {
-      console.log('editor: ', editor)
-      const rect = editor.frame.getBoundingClientRect()
-      console.log('rect: ', rect)
-    }
-  }, [])
 
   useEffect(() => {
-   
+
 
     if (!width && !height) return
 
-  
+
 
     if (isMounted.current) {
-     
+
 
       workAreaRef.current = new fabric.Rect({
         //@ts-ignore
@@ -63,7 +59,7 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
         // backgroundImage: '/blackShirt.jpg',
         width: width - 48,
         height: height,
-     
+
       })
 
       fabric.Image.fromURL('/black-shirt.jpg', (shirtImage) => {
@@ -83,25 +79,23 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
         shirtRef.current = shirtImage
       });
 
-     
-  
+
+
       canvasRef.current.add(workAreaRef.current)
-     
+
 
       loadImage()
-     
-      
 
       isMounted.current = false
-    } 
+    }
 
-    
 
-    if(!isMounted.current) {
-      canvasRef.current.clipTo = function(ctx: any) {
+
+    if (!isMounted.current) {
+      canvasRef.current.clipTo = function (ctx: any) {
         workAreaRef.current.render(ctx);
       };
-      canvasRef.current.setWidth(width - 48 );
+      canvasRef.current.setWidth(width - 48);
       canvasRef.current.setHeight(height);
       canvasRef.current.renderAll();
     }
@@ -116,13 +110,13 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
       absolutePositioned: true,
     });
 
-    if(shirtRef.current) {
+    if (shirtRef.current) {
       shirtRef.current.center()
     }
 
 
- 
-    
+
+
     // workAreaRef.current.clipPath = new fabric.Rect({
     //   left: maskRef.current.left,
     //   top: maskRef.current.top,
@@ -131,13 +125,13 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
     // });
 
 
-    
+
 
 
   }, [width, height])
 
 
- 
+
 
 
 
@@ -154,7 +148,7 @@ const CanvasCustom: React.FC<CanvasCustomProps> = ({ width, height }) => {
     })
   }
 
- 
+
 
   const loadImage = async () => {
     const currentScene = editor.scene.exportToJSON()
